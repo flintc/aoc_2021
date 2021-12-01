@@ -1,0 +1,11 @@
+services:
+  jupyter-lab:
+    build: .
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN}
+      AOC_SESSION: ${AOC_SESSION}
+    ports:
+      - "10006:8888"
+    volumes:
+      - .:/home/jovyan/work
