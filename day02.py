@@ -1,23 +1,14 @@
 from common import *
 
-raw_data = get_input(2, 2021)
-df = pd.DataFrame([dict(
-    direction=x.split(" ")[0], amount=float(x.split(" ")[1]))
-    for x in raw_data.split("\n") if len(x) > 0])
-
+parsed = [x.split(" ") for x in get_input(2, 2021).split("\n") if len(x) > 0]
+df = pd.DataFrame(dict(zip(["dir", "amount"], zip(*parsed)))).astype({"amount": int})
 df = df.assign(
-    y=df.direction
-    .mask(df.direction == "forward", 0)
-    .mask(df.direction == "down", 1)
-    .mask(df.direction == "up", -1),
-    x=df.direction
-    .mask(df.direction != "forward", 0)
-    .mask(df.direction == "forward", 1),
+    y=df.dir.apply(lambda d: 1 if d == "down" else -1 if d == "up" else 0),
+    x=df.dir.apply(lambda d: 1 if d == "forward" else 0),
 )
-df = df.assign(pos=df.x * df.amount)
+df = df.assign(pos=df.x * df.amount, depth=df.y * df.amount)
+part1 = df.sum()
+part2 = df.assign(depth=df.depth.cumsum() * df.pos).sum()
 
-df_part1 = df.assign(depth=df.y * df.amount).sum(axis=0)
-print("Day 2, part 1: ", df_part1.depth * df_part1.pos)
-
-df_part2 = df.assign(depth=(df.y * df.amount).cumsum()*df.pos).sum(axis=0)
-print("Day 2, part 2: ", df_part2.depth * df_part2.pos)
+print("Day 2, part 1: ", part1.depth * part1.pos)
+print("Day 2, part 2: ", part2.depth * part2.pos)
