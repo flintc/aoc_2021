@@ -9,3 +9,8 @@ services:
       - "10006:8888"
     volumes:
       - .:/home/jovyan/work
+  python:
+    extends:
+      service: jupyter-lab
+    working_dir: /home/jovyan/work
+    entrypoint: python
