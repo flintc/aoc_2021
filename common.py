@@ -5,6 +5,7 @@ import operator as op
 import os
 import re
 from pathlib import Path
+from collections import Counter
 
 import numpy as np
 import pandas as pd
@@ -27,8 +28,8 @@ def get_input(day, year=2021, cache_dir=None):
             return f.read()
     else:
         resp = requests.get(
-          f"https://adventofcode.com/{year}/day/{day}/input",
-          cookies={"session": os.environ["AOC_SESSION"]}
+            f"https://adventofcode.com/{year}/day/{day}/input",
+            cookies={"session": os.environ["AOC_SESSION"]}
         )
         if resp.status_code != 200:
             raise Exception(f"Failed to get input for day {day}")
